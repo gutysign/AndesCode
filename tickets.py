@@ -1,41 +1,29 @@
+"""Creación de tickets en memoria para el proyecto HelpDesk."""
+
+from validaciones import validar_datos_ticket
+
+
 def crear_ticket(
     titulo: str,
     descripcion: str,
     prioridad: str,
-    tickets: list[dict]
+    tickets: list[dict],
 ) -> dict:
+    # 1. Validar los datos antes de crear el ticket.
+    validar_datos_ticket(titulo, descripcion, prioridad)
 
-    # Validar que el título no esté vacío
-    if not titulo.strip():
-        raise ValueError("El título no puede estar vacío")
+    # 2. Generar el siguiente ID a partir del mayor ID existente.
+    nuevo_id = max((ticket["id"] for ticket in tickets), default=0) + 1
 
-    # Validar que la descripción no esté vacía
-    if not descripcion.strip():
-        raise ValueError("La descripción no puede estar vacía")
-
-    # Validar la prioridad
-    prioridades_permitidas = ["baja", "media", "alta"]
-
-    if prioridad not in prioridades_permitidas:
-        raise ValueError("La prioridad debe ser baja, media o alta")
-
-    # Generar automáticamente el siguiente ID
-    nuevo_id = max(
-        (ticket["id"] for ticket in tickets),
-        default=0
-    ) + 1
-
-    # Crear el diccionario del ticket
+    # 3. Construir el ticket.
     ticket = {
         "id": nuevo_id,
         "titulo": titulo,
         "descripcion": descripcion,
         "prioridad": prioridad,
-        "estado": "abierto"
+        "estado": "abierto",
     }
 
-    # Agregar el ticket a la lista
+    # 4. Guardar el ticket en la lista y devolverlo.
     tickets.append(ticket)
-
-    # Devolver el ticket creado
     return ticket
