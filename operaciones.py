@@ -2,9 +2,12 @@
 
 import sqlite3
 
+from validaciones import validar_datos_ticket
+
 
 def registrar_ticket(titulo, descripcion, prioridad):
     """Guarda un ticket. SQLite asigna el ID y el estado 'abierto'."""
+    validar_datos_ticket(titulo, descripcion, prioridad)
     conexion = sqlite3.connect("helpdesk.db")
     try:
         conexion.execute(
